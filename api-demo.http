@@ -1,0 +1,68 @@
+### Customer API demonstration
+### Prerequisites: application running on http://localhost:8080
+### In IntelliJ / VS Code REST Client, run requests top-to-bottom.
+### The create response id is captured into @customerId for later requests.
+
+@baseUrl = http://localhost:8080
+@customerId = {{createCustomer.response.body.id}}
+
+### 1. Create a customer
+# @name createCustomer
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "Ada",
+  "lastName": "Lovelace",
+  "email": "ada.lovelace@example.com",
+  "status": "ACTIVE"
+}
+
+### 2. Retrieve the created customer by ID
+GET {{baseUrl}}/api/customers/{{customerId}}
+
+### 3. List all customers
+GET {{baseUrl}}/api/customers
+
+### 4. Update the customer
+PUT {{baseUrl}}/api/customers/{{customerId}}
+Content-Type: application/json
+
+{
+  "firstName": "Augusta Ada",
+  "lastName": "Lovelace",
+  "email": "ada.lovelace@example.com",
+  "status": "INACTIVE"
+}
+
+### 5. Retrieve the updated customer
+GET {{baseUrl}}/api/customers/{{customerId}}
+
+### 6. Delete the customer
+DELETE {{baseUrl}}/api/customers/{{customerId}}
+
+### 7. Attempt to retrieve a deleted customer (expect 404)
+GET {{baseUrl}}/api/customers/{{customerId}}
+
+### 8. Validation error — blank firstName (expect 400)
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "firstName": " ",
+  "lastName": "Hopper",
+  "email": "grace.hopper@example.com",
+  "status": "ACTIVE"
+}
+
+### Optional: duplicate email conflict (expect 409)
+# Create once, then run again with the same email.
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "firstName": "Grace",
+  "lastName": "Hopper",
+  "email": "grace.hopper@example.com",
+  "status": "PENDING"
+}
